@@ -4,9 +4,154 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Zhaoxi.Industrial.View"
+             xmlns:zxc="clr-namespace:Zhaoxi.Controls;assembly=Zhaoxi.Controls"
+             xmlns:vm="clr-namespace:Zhaoxi.Industrial.ViewModel"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <vm:SystemMonitorViewModel x:Key="smVM"/>
+        
+        <!--实时状态按钮-->
+        <ControlTemplate TargetType="ToggleButton" x:Key="StateButtonTemplate">
+            <Border CornerRadius="3" >
+                <Grid>
+                    <TextBlock Text="停机"/>
+                    <TextBlock Text="运行"/>
+                    <Border Margin="2" HorizontalAlignment="Left" Width="23" Background="#DDD" CornerRadius="2">
+                        <TextBlock Text="||" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="8"/>
+                        <Border.RenderTransform>
+                            <TranslateTransform X="22" x:Name="tt"/>
+                        </Border.RenderTransform>
+                    </Border>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </UserControl.Resources>
     <Grid>
-        <TextBlock Text="Test" FontSize="30"/>
+        <Canvas/>
+        <Grid VerticalAlignment="Top" Margin="20,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="320"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+            <!--左侧设备详情-->
+            <Grid DataContext="{Binding Source={StaticResource smVM},Path=TestDevice}">
+                <Grid.RowDefinitions >
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding DeviceName}" Foreground="White" />
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding MonitorValueList}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding ValueName,StringFormat=\{0\}:}" Foreground="#99FFFFFF" VerticalAlignment="Center" />
+                                <lvc:CartesianChart Grid.Column="1" MinHeight="30" DataTooltip="{x:Null}" >
+                                    <lvc:CartesianChart.Series>
+                                        <lvc:LineSeries Fill="Transparent" Values="{Binding Values}" PointGeometrySize="0" StrokeThickness="0.5">
+                                            <lvc:LineSeries.Stroke>
+                                                <LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
+                                                    <GradientStop Color="Orange" Offset="0.5"/>
+                                                    <GradientStop Color="#00FFFFFF" Offset="0"/>
+                                                    <GradientStop Color="#FFFFE2AE" Offset="0.1"/>
+                                                </LinearGradientBrush>
+                                            </lvc:LineSeries.Stroke>
+                                        </lvc:LineSeries>
+                                    </lvc:CartesianChart.Series>
+                                    <lvc:CartesianChart.AxisX>
+                                        <lvc:Axis ShowLabels="False"/>
+                                    </lvc:CartesianChart.AxisX>
+                                    <lvc:CartesianChart.AxisY>
+                                        <lvc:Axis ShowLabels="False"/>
+                                    </lvc:CartesianChart.AxisY>
+                                </lvc:CartesianChart>
+                                <TextBlock Text="{Binding CurrentValue}" Grid.Column="2" Foreground="#99FFFFFF" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <TextBlock Text="{Binding Unit}" Grid.Column="3" Foreground="#99FFFFFF" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="3,0,0,0"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <StackPanel Orientation="Horizontal" Grid.Row="2">
+                    <TextBlock Text="实时状态" Foreground="#99FFFFFF"/>
+                    <ToggleButton/>
+                </StackPanel>
+                <ToggleButton Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" IsChecked="{Binding IsWarning}"/>
+                <ItemsControl Grid.Row="3" ItemsSource="{Binding WarningMessageList}"/>
+            </Grid>
+            <!--右侧全局监控数据-->
+                <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="系统总览" Foreground="White" FontSize="16" HorizontalAlignment="Right" Margin="0,0,20,0"/>
+                <UniformGrid Rows="1" Grid.Row="1" Margin="0,20,0,0">
+                    <StackPanel>
+                        <TextBlock Text="监控值" HorizontalAlignment="Center" Foreground="#99FFFFFF"/>
+                        <zxc:CircularProgressBar Value="70" Height="60" ForeColor="#20c9b4"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="监控值" HorizontalAlignment="Center" Foreground="#99FFFFFF"/>
+                        <zxc:CircularProgressBar Value="50" Height="60"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="监控值" HorizontalAlignment="Center" Foreground="#99FFFFFF"/>
+                        <zxc:CircularProgressBar Value="30" Height="60" ForeColor="#38baec"/>
+                    </StackPanel>
+                </UniformGrid>
+
+                <TextBlock Text="实时日志" Foreground="#44FFFFFF" Grid.Row="2" Margin="5,10"/>
+                <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5" FontSize="11">
+                    <Hyperlink Foreground="#66DFFDFF">详情</Hyperlink>
+                </TextBlock>
+                <ItemsControl Grid.Row="3" ItemsSource="{Binding Source={StaticResource smVM},Path=LogList}" AlternationCount="2">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Border Background="#11FFFFFF" Name="back" Visibility="Collapsed" CornerRadius="14"/>
+                                <Grid TextBlock.Foreground="White" TextBlock.FontSize="10" Height="28">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding RowNumber,StringFormat=\{0:00\}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding DeviceName}" VerticalAlignment="Center" Grid.Column="1"/>
+                                    <TextBlock Text="{Binding LogInfo}" VerticalAlignment="Center" Grid.Column="2"/>
+                                    <Border Grid.Column="3" Height="26" CornerRadius="0,13,13,0" Name="type_back" Margin="0,1,1,1">
+                                        <TextBlock Text="{Binding LogType}" Grid.Column="3" VerticalAlignment="Center" Margin="8,0"/>
+                                    </Border>           
+                                </Grid>
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                    <Setter Property="Visibility" Value="Visible" TargetName="back"/>
+                                </Trigger>
+                                <DataTrigger Binding="{Binding LogType}" Value="1">
+                                    <Setter Property="Background" Value="#66FF0000" TargetName="type_back"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                            
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
