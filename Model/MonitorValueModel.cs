@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LiveCharts;
+using LiveCharts.Defaults;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,13 +51,16 @@ namespace Zhaoxi.Industrial.Model
                         msg += "过高";state = MonitorValueState.High;
                     }
                     ValueStateChanged(state, msg + "。当前值：" + value.ToString(),ValueId);
+                    
+                    Values.Add(new ObservableValue(value)); 
+                    if (Values.Count > 60) Values.RemoveAt(0);
                 }
-
+                
             }
         
         }
          public string ValueDesc { set; get; }
 
-     
+        public ChartValues<ObservableValue> Values { get; set; } = new ChartValues<ObservableValue>();
     }
 }

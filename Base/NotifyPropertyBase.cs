@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Zhaoxi.Industrial.Base
 {
-    internal class NotifyPropertyBase : INotifyPropertyChanged
+    public class NotifyPropertyBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
