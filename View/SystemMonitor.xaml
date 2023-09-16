@@ -4,9 +4,48 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Zhaoxi.Industrial.View"
+             xmlns:zxc="clr-namespace:Zhaoxi.Controls;assembly=Zhaoxi.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Text="Test" FontSize="30"/>
+        <Canvas/>
+        <Grid VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="320"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+            
+            
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="系统总览" Foreground="White" FontSize="16" HorizontalAlignment="Right" Margin="0,0,20,0"/>
+                <UniformGrid Rows="1" Grid.Row="1" Margin="0,20,0,0">
+                    <StackPanel>
+                        <TextBlock Text="监控值" HorizontalAlignment="Center" Foreground="#99FFFFFF"/>
+                        <zxc:CircularProgressBar Value="70" Height="60" BackColor="red"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="监控值" HorizontalAlignment="Center" Foreground="#99FFFFFF"/>
+                        <zxc:CircularProgressBar Value="50" Height="60"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="监控值" HorizontalAlignment="Center" Foreground="#99FFFFFF"/>
+                        <zxc:CircularProgressBar Value="30" Height="60"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="监控值" HorizontalAlignment="Center" Foreground="#99FFFFFF"/>
+                        <zxc:CircularProgressBar Value="100" Height="60"/>
+                    </StackPanel>
+                </UniformGrid>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
