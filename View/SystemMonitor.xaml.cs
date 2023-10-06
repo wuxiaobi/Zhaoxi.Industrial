@@ -24,5 +24,34 @@ namespace Zhaoxi.Industrial.View
         {
             InitializeComponent();
         }
+
+        private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            double newWidth = this.mainView.ActualWidth + e.Delta;
+            double newHeight = this.mainView.ActualHeight + e.Delta;
+            if (newWidth < 500) newWidth = 500;
+            if (newHeight < 100) newHeight = 100;
+            this.mainView.Width = newWidth;
+            this.mainView.Height = newHeight;
+            
+            this.mainView.SetValue(Canvas.LeftProperty, (this.RenderSize.Width - this.mainView.Width) / 2);
+            //进行扩展，使用鼠标光标位置以中心进行缩放
+            //自己扩展
+        }
+
+        private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void Canvas_MouseMove(object sender, MouseEventArgs e)
+        {
+
+        }
     }
 }
