@@ -24,5 +24,25 @@ namespace Zhaoxi.Industrial.View
         {
             InitializeComponent();
         }
+
+        private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+
+        }
+
+        private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void Canvas_MouseMove(object sender, MouseEventArgs e)
+        {
+
+        }
     }
 }
