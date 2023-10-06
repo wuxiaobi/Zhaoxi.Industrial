@@ -14,7 +14,7 @@
         
         <!--实时状态按钮-->
         <ControlTemplate TargetType="ToggleButton" x:Key="StateButtonTemplate">
-            <Border CornerRadius="3" Background="#EEE" Height="20" Width="50" Name="back" >
+            <Border CornerRadius="3" Background="#EEE" Height="20" Width="50" Name="back" HorizontalAlignment="Left" Margin="10,0,0,0" >
                 <Grid>
                     <TextBlock Text="停机" VerticalAlignment="Center" Margin="4,0" FontSize="9"/>
                     <TextBlock Text="运行" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="White" Margin="4,0"  FontSize="9"/>
@@ -47,6 +47,18 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
+
+        <ControlTemplate TargetType="ToggleButton" x:Key="WarningButtonTemplate">
+            <TextBlock Text="&#xe62e;" FontFamily="pack://application:,,,/Zhaoxi.Industrial;component/Assets/Fonts/#iconfont"
+                       Foreground="#FF3300" FontSize="18" VerticalAlignment="Center"
+                       Name="txt" Opacity="0"/>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Opacity" Value="1" TargetName="txt"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    
     </UserControl.Resources>
     <Grid>
         <Canvas/>
@@ -102,11 +114,13 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <StackPanel Orientation="Horizontal" Grid.Row="2">
-                    <TextBlock Text="实时状态" Foreground="#99FFFFFF"/>
-                    <ToggleButton IsChecked="{Binding IsRunning}" Template="{StaticResource StateButtonTemplate}"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Height="40">
+                    <TextBlock Text="实时状态:" Foreground="#99FFFFFF" VerticalAlignment="Center"/>
+                    <ToggleButton IsChecked="{Binding IsRunning}" Template="{StaticResource StateButtonTemplate}" />
                 </StackPanel>
-                <ToggleButton Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" IsChecked="{Binding IsWarning}"/>
+                <ToggleButton Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" IsChecked="{Binding IsWarning}"
+                              Template="{StaticResource WarningButtonTemplate}" Margin="0,0,15,0"
+                              IsEnabled="False"/>
                 <ItemsControl Grid.Row="3" ItemsSource="{Binding WarningMessageList}"/>
             </Grid>
             <!--右侧全局监控数据-->
