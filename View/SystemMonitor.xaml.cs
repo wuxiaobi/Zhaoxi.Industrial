@@ -38,20 +38,38 @@ namespace Zhaoxi.Industrial.View
             //进行扩展，使用鼠标光标位置以中心进行缩放
             //自己扩展
         }
-
+        bool _isMoving = false;
+        Point _downPoint = new Point(0, 0);
+        double left = 0, top = 0;
         private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            _isMoving = true;
+            _downPoint = e.GetPosition(sender as Canvas);
+            left = double.Parse(this.mainView.GetValue(Canvas.LeftProperty).ToString());
+            top = double.Parse(this.mainView.GetValue(Canvas.TopProperty).ToString());
 
+            (sender as Canvas).CaptureMouse();
+            e.Handled = true;
         }
 
         private void Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-
+            _isMoving = false;
+            (sender as Canvas).ReleaseMouseCapture();
+            e.Handled = true;
         }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
+            if (_isMoving)
+            {
+                Point currentPoint = e.GetPosition(sender as Canvas);
 
+                this.mainView.SetValue(Canvas.LeftProperty, left + (currentPoint.X - _downPoint.X));
+                this.mainView.SetValue(Canvas.TopProperty, top + (currentPoint.Y - _downPoint.Y));
+
+                e.Handled = true;
+            }
         }
     }
 }
