@@ -4,15 +4,32 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Zhaoxi.Industrial.Base;
 using Zhaoxi.Industrial.Model;
 
 namespace Zhaoxi.Industrial.ViewModel
 {
-    public class SystemMonitorViewModel
+    public class SystemMonitorViewModel :NotifyPropertyBase
     {
         public ObservableCollection<LogModel> LogList { get; set; }=new ObservableCollection<LogModel>();
-        
+
+        private DeviceModel _currentDevice;
+
+        public DeviceModel CurrentDevice
+        {
+            get { return _currentDevice; }
+            set { _currentDevice = value; this.RaisePropertyChanged(); }
+        }
+        private bool _isShowDetail = false;
+
+        public bool IsShowDetail
+        {
+            get { return _isShowDetail; }
+            set { _isShowDetail = value; this.RaisePropertyChanged(); }
+        }
         public DeviceModel TestDevice { get; set; }
+
+        public CommandBase ComponentCommand { get; set; }
 
         public SystemMonitorViewModel()
         {
@@ -78,7 +95,7 @@ namespace Zhaoxi.Industrial.ViewModel
 
             #endregion
 
-
+            this.ComponentCommand = new CommandBase(new Action<object>(DoTowerCommand));
         }
 
             void InitLogInfo()
@@ -89,6 +106,10 @@ namespace Zhaoxi.Industrial.ViewModel
             this.LogList.Add(new LogModel { RowNumber = 4, DeviceName = "循环水泵 1#", LogInfo = "频率过大", LogType = Base.LogType.Warn });
             this.LogList.Add(new LogModel { RowNumber = 5, DeviceName = "循环水泵 2#", LogInfo = "已启动", LogType = Base.LogType.Info });
             this.LogList.Add(new LogModel { RowNumber = 6, DeviceName = "循环水泵 3#", LogInfo = "已启动", LogType = Base.LogType.Info });
+        }
+        private void DoTowerCommand(object param)
+        {
+
         }
     }
 }

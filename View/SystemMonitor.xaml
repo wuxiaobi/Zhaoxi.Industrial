@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Zhaoxi.Industrial.View"
              xmlns:zxc="clr-namespace:Zhaoxi.Controls;assembly=Zhaoxi.Controls"
+             xmlns:component="clr-namespace:Zhaoxi.Controls.Components;assembly=Zhaoxi.Controls"
              xmlns:vm="clr-namespace:Zhaoxi.Industrial.ViewModel"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:base="clr-namespace:Zhaoxi.Industrial.Base"
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="1200">
     <UserControl.Resources>
@@ -60,7 +62,7 @@
         </ControlTemplate>
 
     </UserControl.Resources>
-    <Grid>
+    <Grid >
         <Canvas Background="Transparent"
                 MouseWheel="Canvas_MouseWheel"
                 MouseLeftButtonDown="Canvas_MouseLeftButtonDown"
@@ -69,6 +71,23 @@
             <Viewbox  Canvas.Left="0" Canvas.Top="340" Name="mainView">
                 <Grid>
                     <Polygon VerticalAlignment="Bottom" Fill="#AAF7F9FA" Points="0,200 150,0 1000,0 1200 200 0,200" Stroke="#DDDFFDFF" StrokeThickness="2"/>
+                <!--冷却塔-->
+                    <component:CoolingTower Width="90" Height="110"  HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                            Margin="125,0,0,95"
+                                            Command="{Binding ComponentCommand}"
+                                            CommandParameter="{Binding Path=(base:GlobalMonitor.DeviceList)[2]}"/>
+
+                    <component:CoolingTower Width="95" Height="115" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                            Margin="98,0,0,52"
+                                            Command="{Binding ComponentCommand}"
+                                            CommandParameter="{Binding Path=(base:GlobalMonitor.DeviceList)[1]}"
+                                            />
+
+                    <component:CoolingTower Width="100" Height="120" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                            Margin="70,0,0,10"
+                                            Command="{Binding ComponentCommand}"
+                                            CommandParameter="{Binding Path=(base:GlobalMonitor.DeviceList)[0]}"
+                                            />
                 </Grid>
             </Viewbox>
         </Canvas>
@@ -79,7 +98,8 @@
                 <ColumnDefinition Width="300"/>
             </Grid.ColumnDefinitions>
             <!--左侧设备详情-->
-            <Grid DataContext="{Binding Source={StaticResource smVM},Path=TestDevice}">
+            <Grid DataContext="{Binding Source={StaticResource smVM}}"
+                  Visibility="{Binding IsShowDetail}">
                 <Grid.RowDefinitions >
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -87,8 +107,8 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="{Binding DeviceName}" Foreground="White" FontSize="14" Margin="0,15"/>
-                <ItemsControl Grid.Row="1" ItemsSource="{Binding MonitorValueList}">
+                <TextBlock Text="{Binding CurrentDevice.DeviceName}" Foreground="White" FontSize="14" Margin="0,15"/>
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding CurrentDevice.MonitorValueList}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -126,12 +146,12 @@
                 </ItemsControl>
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Height="40">
                     <TextBlock Text="实时状态:" Foreground="#99FFFFFF" VerticalAlignment="Center"/>
-                    <ToggleButton IsChecked="{Binding IsRunning}" Template="{StaticResource StateButtonTemplate}" />
+                    <ToggleButton IsChecked="{Binding CurrentDevice.IsRunning}" Template="{StaticResource StateButtonTemplate}" />
                 </StackPanel>
-                <ToggleButton Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" IsChecked="{Binding IsWarning}"
+                <ToggleButton Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" IsChecked="{Binding CurrentDevice.IsWarning}"
                               Template="{StaticResource WarningButtonTemplate}" Margin="0,0,15,0"
                               IsEnabled="False"/>
-                <ItemsControl Grid.Row="3" ItemsSource="{Binding WarningMessageList}">
+                <ItemsControl Grid.Row="3" ItemsSource="{Binding CurrentDevice.WarningMessageList}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Message}" Foreground="#CCFF4400" TextWrapping="Wrap" LineHeight="22">
