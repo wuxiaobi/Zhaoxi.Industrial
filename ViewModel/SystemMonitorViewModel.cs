@@ -109,7 +109,8 @@ namespace Zhaoxi.Industrial.ViewModel
         }
         private void DoTowerCommand(object param)
         {
-
+            CurrentDevice = param as DeviceModel;
+            this.IsShowDetail = true;
         }
     }
 }

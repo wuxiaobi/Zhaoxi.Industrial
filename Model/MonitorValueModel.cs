@@ -9,7 +9,7 @@ using Zhaoxi.Industrial.Base;
 
 namespace Zhaoxi.Industrial.Model
 {
-    public class MonitorValueModel 
+    public class MonitorValueModel :NotifyPropertyBase
     {
         public Action<MonitorValueState, string,string> ValueStateChanged;
         public string ValueId { set; get; }
@@ -54,6 +54,7 @@ namespace Zhaoxi.Industrial.Model
                     
                     Values.Add(new ObservableValue(value)); 
                     if (Values.Count > 60) Values.RemoveAt(0);
+                    this.RaisePropertyChanged();
                 }
                 
             }

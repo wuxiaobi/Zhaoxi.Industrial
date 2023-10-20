@@ -6,6 +6,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Zhaoxi.Communication;
 using Zhaoxi.Industrial.DAL;
 using Zhaoxi.Industrial.Model;
@@ -82,6 +83,13 @@ namespace Zhaoxi.Industrial.BLL
                     deviceList.Add(model);
                     model.DeviceID=dr.Field<string>("d_id");
                     model.DeviceName = dr.Field<string>("d_name");
+                    
+                    /*start 55-系统监控页面布局-平台组装
+                     初始化状态*/
+                    model.IsRunning = true;
+                    model.IsWarning = false;
+                    /*end 55-系统监控页面布局-平台组装*/
+
 
                     foreach (var mv in monitorValue.AsEnumerable().Where(m=>m.Field<string>("d_id") ==
                         model.DeviceID)) 
@@ -112,19 +120,33 @@ namespace Zhaoxi.Industrial.BLL
                         {
                             if (state != Base.MonitorValueState.OK)
                             {
-                                var index= model.WarningMessageList.ToList().FindIndex(w => w.ValueID == value_id);
-                                if (index > -1)
+                                try
                                 {
-                                    model.WarningMessageList.RemoveAt(index); 
-                                }
-                                model.IsWarning = true;
-                                model.WarningMessageList.Add(new WarningMessageModel { ValueID=value_id,Message=msg});
+                                    Application.Current?.Dispatcher.Invoke(() => {
+                                        var index = model.WarningMessageList.ToList().FindIndex(w => w.ValueID == value_id);
+                                        if (index > -1)
+                                        {
+                                            model.WarningMessageList.RemoveAt(index);
+                                        }
+                                        model.IsWarning = true;
+                                        model.WarningMessageList.Add(new WarningMessageModel { ValueID = value_id, Message = msg });
 
-                                var ss = model.WarningMessageList.Count > 0;
-                                if (model.IsWarning !=ss) {
-                                    model.IsWarning = ss;
+                                        var ss = model.WarningMessageList.Count > 0;
+                                        if (model.IsWarning != ss)
+                                        {
+                                            model.IsWarning = ss;
+
+                                        }
+
+                                    });
 
                                 }
+                                catch (Exception)
+                                {
+
+                                    throw;
+                                }
+
                             }
                         };
                     }

@@ -9,11 +9,12 @@
              xmlns:vm="clr-namespace:Zhaoxi.Industrial.ViewModel"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:base="clr-namespace:Zhaoxi.Industrial.Base"
+             xmlns:converter="clr-namespace:Zhaoxi.Industrial.Base.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="1200">
     <UserControl.Resources>
         <vm:SystemMonitorViewModel x:Key="smVM"/>
-
+        <converter:Bool2VisibilityConverter x:Key="Bool2VisibilityConverter"/>
         <!--实时状态按钮-->
         <ControlTemplate TargetType="ToggleButton" x:Key="StateButtonTemplate">
             <Border CornerRadius="3" Background="#EEE" Height="20" Width="50" Name="back" HorizontalAlignment="Left" Margin="10,0,0,0" >
@@ -62,7 +63,7 @@
         </ControlTemplate>
 
     </UserControl.Resources>
-    <Grid >
+    <Grid DataContext="{Binding Source={StaticResource smVM}}">
         <Canvas Background="Transparent"
                 MouseWheel="Canvas_MouseWheel"
                 MouseLeftButtonDown="Canvas_MouseLeftButtonDown"
@@ -75,19 +76,23 @@
                     <component:CoolingTower Width="90" Height="110"  HorizontalAlignment="Left" VerticalAlignment="Bottom"
                                             Margin="125,0,0,95"
                                             Command="{Binding ComponentCommand}"
-                                            CommandParameter="{Binding Path=(base:GlobalMonitor.DeviceList)[2]}"/>
+                                            CommandParameter="{Binding Path=(base:GlobalMonitor.DeviceList)[2]}"
+                                            IsRunning="{Binding Path=(base:GlobalMonitor.DeviceList)[2].IsRunning}"
+                                            IsFault="{Binding Path=(base:GlobalMonitor.DeviceList)[2].IsWarning}"/>
 
                     <component:CoolingTower Width="95" Height="115" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                                             Margin="98,0,0,52"
                                             Command="{Binding ComponentCommand}"
                                             CommandParameter="{Binding Path=(base:GlobalMonitor.DeviceList)[1]}"
-                                            />
+                                            IsRunning="{Binding Path=(base:GlobalMonitor.DeviceList)[1].IsRunning}"
+                                            IsFault="{Binding Path=(base:GlobalMonitor.DeviceList)[1].IsWarning}"/>
 
                     <component:CoolingTower Width="100" Height="120" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                                             Margin="70,0,0,10"
                                             Command="{Binding ComponentCommand}"
                                             CommandParameter="{Binding Path=(base:GlobalMonitor.DeviceList)[0]}"
-                                            />
+                                            IsRunning="{Binding Path=(base:GlobalMonitor.DeviceList)[0].IsRunning}"
+                                            IsFault="{Binding Path=(base:GlobalMonitor.DeviceList)[0].IsWarning}"/>
                 </Grid>
             </Viewbox>
         </Canvas>
@@ -98,8 +103,8 @@
                 <ColumnDefinition Width="300"/>
             </Grid.ColumnDefinitions>
             <!--左侧设备详情-->
-            <Grid DataContext="{Binding Source={StaticResource smVM}}"
-                  Visibility="{Binding IsShowDetail}">
+            <Grid 
+                  Visibility="{Binding IsShowDetail,Converter={StaticResource Bool2VisibilityConverter}}">
                 <Grid.RowDefinitions >
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
