@@ -59,6 +59,11 @@ namespace Zhaoxi.Industrial.View
             e.Handled = true;
         }
 
+        private void Pipeline_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
             if (_isMoving)
